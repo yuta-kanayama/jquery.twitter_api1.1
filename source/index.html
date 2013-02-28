@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+
+<title>jquery.twitter_api1.1.js</title>
+
+<!-- javascript -->
+<script src="libs/jquery.js"></script>
+<script src="libs/oauth.js"></script>
+<script src="libs/sha1.js"></script>
+<script src="js/jquery.twitter_api1.1.js"></script>
+<script>
+
+function jTwitter_Callback(data){
+	var $target = $('#twitter');
+	var dateObj = new Date;
+	var html = '', text, time;
+	for(var i=0, len=data.length; i<len; i++){
+		text = data[i].text;
+		//URLにリンクを付ける
+		text = text.replace(/(s?https?:\/\/[-_.!~*'()a-zA-Z0-9;\/?:@&=+$,%#]+)/gi,'<a href="$1">$1</a>');
+		//ハッシュタグにリンク
+		text = text.replace(/#(\w+)/gi,'<a href="http://twitter.com/search?q=%23$1">#$1</a>');
+		//リプライにリンク
+		text = text.replace(/@(\w+)/gi,'<a href="http://twitter.com/$1">@$1</a>');
+		time = jTwitter.created_at_fnc(data[i].created_at);
+		html += "<p>"+time+" : "+text+"</p>";
+	}
+	$target.html(html);
+}
+
+$(function(){
+
+jTwitter.init({
+	api: 'https://api.twitter.com/1.1/statuses/user_timeline.json',
+	count: 10,
+	callback: "jTwitter_Callback",
+	consumerKey: "Y7xuRzaScWuQ0zy7ywSKpg",
+	consumerSecret: "Sw7kvBnIxUtBjwjExKe6NSrAdEiXoPRO7rblZp3Z0",
+	accessToken: "251337053-gTd8fLEAtsfWJMjmwo2ajGUdCcrAqqjb6TqtvUC8",
+	tokenSecret: "Gkl54yjN1oeDN7iW1nI6WhUJRerrksnXXbvJ0BCQ"
+});
+
+});
+</script>
+<script src="libs/google-analytics.js"></script>
+</head>
+<body>
+
+<h1>demo</h1>
+
+<div id="twitter"></div>
+
+</body>
+</html>
